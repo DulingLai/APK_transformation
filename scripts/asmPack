@@ -1,0 +1,42 @@
+#!/bin/tcsh -fx
+
+set apkDir = /Users/dulinglai/Documents/Study/ResearchProjects/LocationFreq/APK_transformation/testApks
+set dex2jarDir = /Users/dulinglai/Documents/Study/ResearchProjects/Tools/dex2jar
+set androidTool = /Users/dulinglai/Library/Android/sdk/build-tools/25.0.1
+set keyPath = /Users/dulinglai/Documents/Study/ResearchProjects/Tools/AndroidKey/
+set appName = $1
+
+cd $apkDir/decompiled/instrumented/$appName
+
+jar cf ../$appName.jar *
+
+#echo "executing dx. -f -o classes.dex ../$appName.jar"
+$androidTool/dx --dex --multi-dex --output=. ../$appName.jar
+
+# remove the original METAINF
+cp $apkDir/orig/$1.apk $apkDir/decompiled/instrumented/unaligned_$appName.apk
+foreach f (`$androidTool/aapt list $apkDir/decompiled/instrumented/unaligned_$appName.apk |grep "META-INF"`)
+  $androidTool/aapt remove $apkDir/decompiled/instrumented/unaligned_$appName.apk $f
+end
+
+#echo "Replacing classes.dex file"
+if (-f classes2.dex) then
+  zip -r $apkDir/decompiled/instrumented/unaligned_$appName.apk classes.dex
+  zip -r $apkDir/decompiled/instrumented/unaligned_$appName.apk classes2.dex
+  rm classes.dex
+  rm classes2.dex
+else
+  zip -r $apkDir/decompiled/instrumented/unaligned_$appName.apk classes.dex
+  # rm classes.dex
+endif
+
+#echo "Align the unsigned APK using zipalign."
+rm $apkDir/decompiled/instrumented/$appName.apk
+$androidTool/zipalign -v -p 4 $apkDir/decompiled/instrumented/unaligned_$appName.apk $apkDir/decompiled/instrumented/$appName.apk
+
+#echo "Sign the APK"
+$androidTool/apksigner sign --ks $keyPath/dulingKey --ks-pass pass:123456 --key-pass pass:123456 $apkDir/decompiled/instrumented/$appName.apk
+$androidTool/apksigner verify $apkDir/decompiled/instrumented/$appName.apk
+
+#echo "executing /Applications/JD-GUI.app/Contents/MacOS/jd-gui $apkDir/decompiled/instrumented/$appName.jar"
+#/Applications/JD-GUI.app/Contents/MacOS/jd-gui $apkDir/decompiled/instrumented/$appName.jar &

@@ -1,0 +1,13 @@
+#!/bin/tcsh -fx
+
+set apkDir = /Users/dulinglai/Documents/Study/ResearchProjects/LocationFreq/APK_transformation/testApks
+set adb = /Users/dulinglai/Library/Android/sdk/platform-tools/adb
+
+$adb uninstall $1
+
+$adb logcat -c
+$adb logcat > $apkDir/../logs/$1_logcat.log &
+
+$adb install -r $apkDir/decompiled/instrumented/$1.apk
+
+#$adb -s $device push ~/empty.log /ca.ubc.laiduling.data/ca.ubc.laiduling.data/$1/$2.log

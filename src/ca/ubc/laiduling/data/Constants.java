@@ -19,7 +19,7 @@ public class Constants {
     public static final String CLASS_FILE_REGEX = "[^\\s]+\\.class$";
 
 //    public static final String APP_NAME = "com.waze";
-    public static final String APP_NAME = "com.PYOPYO.StarTracker";
+//    public static final String APP_NAME = "com.PYOPYO.StarTracker";
 //    public static final String APP_NAME = "com.acmeaom.android.myradar";
 //    public static final String APP_NAME = "com.application.zomato";
 //    public static final String APP_NAME = "com.appmind.radios.ca";
@@ -34,7 +34,7 @@ public class Constants {
 //    public static final String APP_NAME = "com.morkim.thunder.gps";
 //    public static final String APP_NAME = "com.passportparking.mobile.toronto";
 //    public static final String APP_NAME = "com.sygic.aura";
-//    public static final String APP_NAME = "com.tripadvisor.tripadvisor-170515015";
+    public static final String APP_NAME = "com.tripadvisor.tripadvisor-170515015";
 //    public static final String APP_NAME = "cz.aponia.bor3.offlinemaps";
 //    public static final String APP_NAME = "me.lyft.android";
 //    public static final String APP_NAME = "org.mrchops.android.digihud";

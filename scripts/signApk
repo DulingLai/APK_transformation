@@ -1,0 +1,12 @@
+#!/bin/tcsh -fx
+set apkDir = /Users/dulinglai/Documents/Study/ResearchProjects/LocationFreq/APK_transformation/testApks
+set androidTool = /Users/dulinglai/Library/Android/sdk/build-tools/27.0.3
+set keyPath = /Users/dulinglai/Documents/Study/ResearchProjects/Tools/AndroidKey/
+
+rm $apkDir/decompiled/instrumented/$1.apk
+$androidTool/zipalign -v -p 4 $apkDir/decompiled/instrumented/$1_unaligned.apk $apkDir/decompiled/instrumented/$1.apk
+rm -f $apkDir/decompiled/instrumented/$1_unaligned.apk
+
+#echo "Sign the APK"
+$androidTool/apksigner sign --ks $keyPath/dulingKey --ks-pass pass:123456 --key-pass pass:123456 $apkDir/decompiled/instrumented/$1.apk
+$androidTool/apksigner verify $apkDir/decompiled/instrumented/$1.apk

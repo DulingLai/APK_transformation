@@ -14,6 +14,9 @@
     <orderEntry type="library" name="asm-xml-6.0" level="project" />
     <orderEntry type="library" name="commons-io-2.6" level="project" />
     <orderEntry type="library" name="android" level="project" />
-    <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="dx" level="project" />
+    <orderEntry type="library" name="android-support-v4" level="project" />
+    <orderEntry type="library" name="google-play-location" level="project" />
+    <orderEntry type="library" name="android-appcompat" level="project" />
   </component>
 </module>

@@ -1,5 +1,6 @@
 package ca.ubc.laiduling.util;
 
+import android.util.Log;
 import org.objectweb.asm.*;
 
 import static org.objectweb.asm.Opcodes.*;
@@ -34,21 +35,26 @@ public class AsmUtils {
         mv.visitMethodInsn(Opcodes.INVOKESTATIC, className, "printStackTrace", "()V", false);
     }
 
-    public static void addLogLocationRequest(MethodVisitor mv, String className, String fieldName, String typeSign){
-        mv.visitCode();
-        mv.visitLdcInsn("duling");
-        mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
+    // add start service to the original app
+    public static void addStartService(MethodVisitor mv){
+        mv.visitTypeInsn(NEW, "android/content/Intent");
         mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
-        mv.visitLdcInsn("Location Requested at: ");
-        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
-        mv.visitVarInsn(ALOAD, 1);
-        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
-        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
-        mv.visitMethodInsn(INVOKESTATIC, "android/util/Log", "d", "(Ljava/lang/String;Ljava/lang/String;)I", false);
+        mv.visitVarInsn(ALOAD, 0);
+        mv.visitLdcInsn(Type.getType("Lca/ubc/laiduling/util/dulingActivityAwareLocation;"));
+        mv.visitMethodInsn(INVOKESPECIAL, "android/content/Intent", "<init>", "(Landroid/content/Context;Ljava/lang/Class;)V", false);
+        mv.visitVarInsn(ASTORE, 2);
+        mv.visitVarInsn(ALOAD, 0);
+        mv.visitVarInsn(ALOAD, 2);
+        mv.visitMethodInsn(INVOKEVIRTUAL, "ca/ubc/laiduling/util/testBytecode", "startService", "(Landroid/content/Intent;)Landroid/content/ComponentName;", false);
         mv.visitInsn(POP);
         mv.visitInsn(RETURN);
-        mv.visitMaxs(3, 4);
+    }
+
+    public static void addLogLocationRequest(MethodVisitor mv){
+        mv.visitLdcInsn("duling");
+        mv.visitLdcInsn("location requested!");
+        mv.visitMethodInsn(INVOKESTATIC, "android/util/Log", "d", "(Ljava/lang/String;Ljava/lang/String;)I", false);
+        mv.visitInsn(Opcodes.POP);
     }
 
     // add print stack trace method

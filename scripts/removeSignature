@@ -1,0 +1,10 @@
+#!/bin/tcsh -fx
+
+set apkDir = /Users/dulinglai/Documents/Study/ResearchProjects/LocationFreq/APK_transformation/testApks
+set androidTool = /Users/dulinglai/Library/Android/sdk/build-tools/27.0.3
+
+# remove the original METAINF
+cp $apkDir/orig/$1.apk $apkDir/decompiled/instrumented/$1_unaligned.apk
+foreach f (`$androidTool/aapt list $apkDir/decompiled/instrumented/$1_unaligned.apk |grep "META-INF"`)
+  $androidTool/aapt remove $apkDir/decompiled/instrumented/$1_unaligned.apk $f
+end

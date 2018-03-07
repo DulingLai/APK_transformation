@@ -1,15 +1,17 @@
 #!/bin/tcsh -fx
 
 set apkDir = /Users/dulinglai/Documents/Study/ResearchProjects/LocationFreq/APK_transformation/testApks
-set dex2jarDir = /Users/dulinglai/Documents/Study/ResearchProjects/Tools/dex2jar
+set dex2jarDir = /Users/dulinglai/Documents/Study/ResearchProjects/Tools/dex-tools
 
 $dex2jarDir/d2j-dex2jar.sh $apkDir/orig/$1.apk -o $apkDir/decompiled/orig/$1_dex2jar.jar --force
 
-rm -r $apkDir/decompiled/orig/$1
-rm -r $apkDir/decompiled/instrumented/$1
+rm -rf $apkDir/decompiled/orig/$1
+rm -rf $apkDir/decompiled/instrumented/$1
+rm -f $apkDir/decompiled/instrumented/$1.jar
 mkdir $apkDir/decompiled/orig/$1
 
 cd $apkDir/decompiled/orig/$1
 jar xf $apkDir/decompiled/orig/$1_dex2jar.jar
+# rm $apkDir/decompiled/orig/$1_dex2jar.jar
 
 #/Applications/JD-GUI.app/Contents/MacOS/jd-gui $apkDir/decompiled/orig/$1_dex2jar.jar &

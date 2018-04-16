@@ -1,12 +1,8 @@
 package ca.ubc.laiduling.util;
 
-import android.util.Log;
 import org.objectweb.asm.*;
 
-import static org.objectweb.asm.Opcodes.*;
-
-
-public class AsmUtils {
+public class AsmUtils implements Opcodes{
 
     /*
     class related utils
@@ -36,7 +32,7 @@ public class AsmUtils {
     }
 
     // add start service to the original app
-    public static void addStartService(MethodVisitor mv){
+    public static void addStartService(MethodVisitor mv, String className){
         mv.visitTypeInsn(NEW, "android/content/Intent");
         mv.visitInsn(DUP);
         mv.visitVarInsn(ALOAD, 0);
@@ -45,16 +41,20 @@ public class AsmUtils {
         mv.visitVarInsn(ASTORE, 2);
         mv.visitVarInsn(ALOAD, 0);
         mv.visitVarInsn(ALOAD, 2);
-        mv.visitMethodInsn(INVOKEVIRTUAL, "ca/ubc/laiduling/util/testBytecode", "startService", "(Landroid/content/Intent;)Landroid/content/ComponentName;", false);
+        mv.visitMethodInsn(INVOKEVIRTUAL, className, "startService", "(Landroid/content/Intent;)Landroid/content/ComponentName;", false);
+//        mv.visitInsn(POP);
         mv.visitInsn(POP);
-        mv.visitInsn(RETURN);
+        mv.visitInsn(POP);
     }
 
     public static void addLogLocationRequest(MethodVisitor mv){
+        mv.visitInsn(POP);
+        mv.visitInsn(POP);
+        mv.visitInsn(POP2);
+        mv.visitInsn(POP);
         mv.visitLdcInsn("duling");
         mv.visitLdcInsn("location requested!");
         mv.visitMethodInsn(INVOKESTATIC, "android/util/Log", "d", "(Ljava/lang/String;Ljava/lang/String;)I", false);
-        mv.visitInsn(Opcodes.POP);
     }
 
     // add print stack trace method

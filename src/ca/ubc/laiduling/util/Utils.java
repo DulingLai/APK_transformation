@@ -16,6 +16,7 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.util.CheckClassAdapter;
+import org.objectweb.asm.util.TraceClassVisitor;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -67,14 +68,22 @@ public class Utils {
                 // create a class visitor
                 ClassVisitor classVisitor = new LocationRequestAdapter(classWriter);
 
-                classReader.accept(classVisitor,0);
+                classReader.accept(classVisitor,ClassReader.SKIP_DEBUG);
 
                 byte[] outputClassBytes = classWriter.toByteArray();
 
                 // verify the instrumented class file
+//                checkGeneratedClass(outputClassBytes);
+                final ClassReader verifyCR = new ClassReader(outputClassBytes);
 //                StringWriter sw = new StringWriter();
-//                CheckClassAdapter.verify(new ClassReader(outputClassBytes), false, new PrintWriter(sw));
-//                assertTrue(sw.toString(), sw.toString().length()==0);
+//                PrintWriter pw = new PrintWriter(sw);
+//                CheckClassAdapter.verify(verifyCR, false, pw);
+//                if(sw.toString().length()!=0){
+//                    System.err.println("Verify Bytecode Error!");
+//                    System.err.println(sw);
+//                    throw new IllegalStateException("Bytecode Verification Failed!");
+//                }
+                verifyCR.accept(new CheckClassAdapter(new ClassWriter(0)),0);
 
                 // Write the output class file
                 File instrumentedClassFolder = new File(Constants.INSTRUMENTED_OUTPUT_DIR + Constants.APP_NAME);
@@ -88,6 +97,7 @@ public class Utils {
             e.printStackTrace();
         }
     }
+
 
     // Step 4. pack modified class files to a jar file
     public static boolean packClassFiles(String apkName) {
@@ -113,13 +123,6 @@ public class Utils {
 
             File file = new File(outJarDir);
             System.out.println("Working on: " + file.getName());
-            long time1 = System.currentTimeMillis();
-
-//                compileJavaFile("DulingUtils.java");
-//                if (!addClassFileSucc) {
-//                    addClassFileSucc = addClassFileToJar("DulingUtils.class", file.getName(), file.getPath());
-//                }
-//                String dexFileName = jarName2DexName(file.getName());
 
             if(enableMultidex) {
                 String[] cmd = {"--dex", "--multi-dex", "--output=" + rootPath, file.getAbsolutePath()};

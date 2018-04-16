@@ -1,8 +1,7 @@
 #!/bin/tcsh -fx
 
 set apkDir = /Users/dulinglai/Documents/Study/ResearchProjects/LocationFreq/APK_transformation/testApks/decompiled/instrumented
-set apktoolDir = /Users/dulinglai/Documents/Study/ResearchProjects/Tools/
+set apktoolDir = /Users/dulinglai/Documents/Study/ResearchProjects/Tools
 set tmpDir = /Users/dulinglai/Documents/Study/ResearchProjects/LocationFreq/APK_transformation/testApks/decompiled/instrumented/tmp
-
-rm -f $tmpDir
-java -jar $apktoolDir/apktool.jar d $apkDir/$1.apk -f -o $tmpDir
+mkdir $tmpDir
+java -jar $apktoolDir/apktool.jar d $apkDir/$1_unaligned.apk -f -o $tmpDir

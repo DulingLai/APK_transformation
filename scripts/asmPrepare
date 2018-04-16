@@ -3,12 +3,13 @@
 set apkDir = /Users/dulinglai/Documents/Study/ResearchProjects/LocationFreq/APK_transformation/testApks
 set dex2jarDir = /Users/dulinglai/Documents/Study/ResearchProjects/Tools/dex-tools
 
-$dex2jarDir/d2j-dex2jar.sh $apkDir/orig/$1.apk -o $apkDir/decompiled/orig/$1_dex2jar.jar --force
-
-rm -rf $apkDir/decompiled/orig/$1
-rm -rf $apkDir/decompiled/instrumented/$1
-rm -f $apkDir/decompiled/instrumented/$1.jar
+rm -rf $apkDir/decompiled/orig/
+rm -rf $apkDir/decompiled/instrumented/
+mkdir $apkDir/decompiled/orig/
+mkdir $apkDir/decompiled/instrumented/
 mkdir $apkDir/decompiled/orig/$1
+
+$dex2jarDir/d2j-dex2jar.sh $apkDir/orig/$1.apk -o $apkDir/decompiled/orig/$1_dex2jar.jar --force
 
 cd $apkDir/decompiled/orig/$1
 jar xf $apkDir/decompiled/orig/$1_dex2jar.jar

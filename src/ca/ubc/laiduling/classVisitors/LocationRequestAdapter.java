@@ -66,7 +66,7 @@ public class LocationRequestAdapter extends ClassVisitor {
                     } else{
                         AsmUtils.addLogLocationRequest(mv);
                     }
-                    AsmUtils.addStartService(mv);
+                    AsmUtils.addStartService(mv, className);
                 } else {
                     super.visitMethodInsn(opcode, owner, name, desc, itf);
                 }
@@ -82,49 +82,12 @@ public class LocationRequestAdapter extends ClassVisitor {
                 isGPS = true;
             }
         }
-    }
 
-    public static char[] parseMethodArguments(String desc) {
-        String[] splitDesc = splitMethodDesc(desc);
-        char[] returnChars = new char[splitDesc.length];
-        int count = 0;
-        for(String type : splitDesc) {
-            if(type.startsWith("L") || type.startsWith("[")) {
-                returnChars[count] = 'L';
-            }
-            else {
-                if(type.length() > 1) { throw new RuntimeException(); }
-                returnChars[count] = type.charAt(0);
-            }
-            count += 1;
-        }
-        return returnChars;
-    }
-
-    public static String[] splitMethodDesc(String desc) {
-        int arraylen = Type.getArgumentTypes(desc).length;
-        int beginIndex = desc.indexOf('(');
-        int endIndex = desc.lastIndexOf(')');
-        if((beginIndex == -1 && endIndex != -1) || (beginIndex != -1 && endIndex == -1)) {
-            System.err.println(beginIndex);
-            System.err.println(endIndex);
-            throw new RuntimeException();
-        }
-        String x0;
-        if(beginIndex == -1 && endIndex == -1) {
-            x0 = desc;
-        }
-        else {
-            x0 = desc.substring(beginIndex + 1, endIndex);
-        }
-        Pattern pattern = Pattern.compile("\\[*L[^;]+;|\\[[ZBCSIFDJ]|[ZBCSIFDJ]"); //Regex for desc \[*L[^;]+;|\[[ZBCSIFDJ]|[ZBCSIFDJ]
-        Matcher matcher = pattern.matcher(x0);
-        String[] listMatches = new String[arraylen];
-        int counter = 0;
-        while(matcher.find()) {
-            listMatches[counter] = matcher.group();
-            counter += 1;
-        }
-        return listMatches;
+        // let ASM compute Maxs for us, appear not working properly
+//        @Override
+//        public void visitEnd() {
+//            mv.visitMaxs(0,0);
+//            mv.visitEnd();
+//        }
     }
 }
